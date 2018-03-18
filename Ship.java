@@ -1,4 +1,4 @@
-package BattleShip;
+package Battleship;
 
 public class Ship {
 	//[section], [0] = x [1] = y [2] = hit

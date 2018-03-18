@@ -1,4 +1,4 @@
-package BattleShip;
+package Battleship;
 
 public class Node {
 	int xpos;

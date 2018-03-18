@@ -1,12 +1,17 @@
-package BattleShip;
+package Battleship;
 
 public class Board {
 	Node[][] Grid;
 	Ship[] Ships;
+	int[] ShipL = new int[4];
 	//defult
 	Board(){
 		Grid = new Node[10][10];
 		Ships = new Ship[5];
+		ShipL[0] = 1;
+		ShipL[1] = 2;
+		ShipL[2] = 1;
+		ShipL[3] = 1;
 		initializeGrid();
 	}
 	Board(int i){
@@ -26,11 +31,21 @@ public class Board {
 	}
 	
 	//Variable Sized
-	Board(int sizeX, int sizeY, int s){
+	Board(int sizeX, int sizeY, int[] s){
 		Grid = new Node[sizeX][sizeY];
 		//s is number of ships
-		Ships = new Ship[s];
+		ShipL = s;
+		int count = 0;
+		for(int i = 0; i < 4; i ++){
+			count += ShipL[i];
+		}
+		Ships = new Ship[count];
 		initializeGrid();
+		for(int P = 0; P < 2; P++){
+			for(int i = 0; i < s.length; i++){
+
+			}
+		}
 	}
 	
 	
