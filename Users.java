@@ -1,4 +1,4 @@
-package BattleShip;
+package Battleship;
 
 public class Users {
 	boolean isHuman;
@@ -16,10 +16,25 @@ public class Users {
 		return isHuman;
 	}
 	void askUser(String s){
-		P.askPlayer(s);
+		if(isHuman){
+			P.askPlayer(s);
+		}else{
+			C.askComp(s);
+		}
+	}
+	String getName(){
+		if(isHuman){
+			return P.name;
+		}else{
+			return C.name;
+		}
 	}
 	String getInput(){
-		return P.sendInput();
+		if(isHuman){
+			return P.sendInput();
+		}else{
+			return C.sendInput();
+		}
 	}
 
 }
