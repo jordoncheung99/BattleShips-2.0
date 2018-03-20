@@ -1,12 +1,17 @@
-package BattleShip;
+package Battleship;
 
 public class Board {
 	Node[][] Grid;
 	Ship[] Ships;
+	int[] ShipL = new int[4];
 	//defult
 	Board(){
 		Grid = new Node[10][10];
 		Ships = new Ship[5];
+		ShipL[0] = 1;
+		ShipL[1] = 2;
+		ShipL[2] = 1;
+		ShipL[3] = 1;
 		initializeGrid();
 	}
 	Board(int i){
@@ -26,18 +31,41 @@ public class Board {
 	}
 	
 	//Variable Sized
-	Board(int sizeX, int sizeY, int s){
+	Board(int sizeX, int sizeY, int[] s){
 		Grid = new Node[sizeX][sizeY];
 		//s is number of ships
-		Ships = new Ship[s];
+		ShipL = s;
+		int count = 0;
+		for(int i = 0; i < 4; i ++){
+			count += ShipL[i];
+		}
+		Ships = new Ship[count];
 		initializeGrid();
+		int [] lengthOfActualShip = new int[count];
+		int j = 0;
+		for(int i = 0; i < Ships.length; i++){
+			boolean Help = true;
+			do{
+				if(ShipL[j] != 0){
+					lengthOfActualShip[i] = j+2;
+					ShipL[j] -= 1;
+					Help = false;
+				}else{
+					j++;
+				}
+			}while(Help);
+		}
+		for(int i = 0; i < Ships.length; i++){
+			Ships[i].setShipNoBreakArray(lengthOfActualShip[i]);
+		}
+
 	}
 	
 	
 	private void initializeGrid(){
 		for(int x = 0; x < Grid.length; x++){
 			for(int y = 0; y< Grid[1].length; y++){
-				Grid[x][y] = new Node(x,y,0,false);
+				Grid[x][y] = new Node(x,y,-1,false);
 			}
 		}
 		for(int x = 0; x < Ships.length; x++){
@@ -46,6 +74,7 @@ public class Board {
 	}
 	
 	//prob change to a return type
+	//Checks if the ship is being placed ontop of another 
 	void checkShipPlace(int[][] sArry){
 		boolean valid = true;
 		for(int x = 0; x < sArry.length; x++){
@@ -75,10 +104,37 @@ public class Board {
 		}
 	}
 	
+	boolean beenShot(int x, int y){
+		try{
+			if(Grid[x][y].GetIsShot()){
+				return true;
+			}else{
+				return false;
+			}
+		}catch(IndexOutOfBoundsException E){
+			return true;
+		}
+	}
+	String shot(int x, int y){
+		Grid[x][y].setIsShot(true);
+		int tempID = Grid[x][y].getShipID();
+		if(tempID != -1){
+			//Ship getting hit is here! and seeing if they sank
+			tempID -=1;
+			Ships[tempID].isHit(x,y);
+			if(Ships[tempID].getSunk()){
+				return "Sunken Ship!";
+			}else{
+				return "Hit!";
+			}
+		}else{
+			return "Miss!";
+		}
+	}
 	void display(boolean partial){
 		for(int y = 0; y <Grid.length; y++){
 			for(int x =0; x < Grid[1].length; x++){
-				if(Grid[x][y].getShipID() == 0){
+				if(Grid[x][y].getShipID() == -1){
 					if(Grid[x][y].GetIsShot()){
 						System.out.print("M");
 					}else{
@@ -99,4 +155,18 @@ public class Board {
 		}
 		System.out.println(" ");
 	}
+	boolean allShipsDead(){
+		int counter = 0;
+		for(int i = 0; i < Ships.length; i++){
+			if(Ships[i].getSunk()){
+				counter++;
+			}
+		}
+		if(counter == Ships.length){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 }
